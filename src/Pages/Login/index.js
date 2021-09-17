@@ -2,34 +2,25 @@ import React, { useState } from 'react'
 import { Keyboard, Platform, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import firebase from '../../firebaseConnection'
 
-export default function CreateAccount() {
+export default function Login() {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
+  const [ user, setUser ] = useState('');
 
   async function cadastrar() {
-    await firebase.auth().createUserWithEmailAndPassword(email, password)
+    await firebase.auth().signInWithEmailAndPassword(email, password)
       .then((value) => {
         Platform.OS === 'android' ?
-          ToastAndroid.show(`Usuário criado: ${ value.user.email }`, ToastAndroid.SHORT)
+          ToastAndroid.show(`Bem-vindo: ${ value.user.email }`, ToastAndroid.SHORT)
           :
           alert(`Usuário criado: ${ value.user.email }`)
+
+        setUser(value.user.email);
       })
       .catch((error) => {
-        if (error.code === 'auth/weak-password') {
-          alert('Sua senha deve ter pelo menos 6 caracteres');
-          return;
-        }
-        if (error.code === 'auth/invalid-email') {
-          alert('E-mail inválido');
-          return;
-        } else {
-          alert('Ops... Algo deu errado! 😵')
-          return;
-        }
+        alert('Ops... Algo deu errado! 😵')
+        return;
       })
-
-    setEmail('');
-    setPassword('');
   }
 
   return (
@@ -50,8 +41,13 @@ export default function CreateAccount() {
         />
 
         <TouchableOpacity style={ styles.btn } onPress={ cadastrar }>
-          <Text style={ styles.textBtn }>Criar conta</Text>
+          <Text style={ styles.textBtn }>Login</Text>
         </TouchableOpacity>
+
+        <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center' }} >
+          { user }
+        </Text>
+
       </View>
     </TouchableWithoutFeedback>
   )
