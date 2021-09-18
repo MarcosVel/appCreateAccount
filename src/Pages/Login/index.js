@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/core';
 import React, { useState } from 'react'
 import { Keyboard, Platform, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import firebase from '../../firebaseConnection'
@@ -7,7 +8,9 @@ export default function Login() {
   const [ password, setPassword ] = useState('');
   const [ user, setUser ] = useState('');
 
-  async function cadastrar() {
+  const navigation = useNavigation();
+
+  async function entrar() {
     await firebase.auth().signInWithEmailAndPassword(email, password)
       .then((value) => {
         Platform.OS === 'android' ?
@@ -16,11 +19,18 @@ export default function Login() {
           alert(`Usuário criado: ${ value.user.email }`)
 
         setUser(value.user.email);
+
+        navigation.navigate('Perfil', {
+          email: value.user.email
+        })
+
+        setPassword('');
       })
       .catch((error) => {
         alert('Ops... Algo deu errado! 😵')
         return;
       })
+
   }
 
   return (
@@ -40,13 +50,13 @@ export default function Login() {
           onChangeText={ (texto) => setPassword(texto) }
         />
 
-        <TouchableOpacity style={ styles.btn } onPress={ cadastrar }>
+        <TouchableOpacity style={ styles.btn } onPress={ entrar }>
           <Text style={ styles.textBtn }>Login</Text>
         </TouchableOpacity>
 
-        <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center' }} >
+        {/* <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center' }} >
           { user }
-        </Text>
+        </Text> */}
 
       </View>
     </TouchableWithoutFeedback>

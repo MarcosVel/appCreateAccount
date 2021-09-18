@@ -1,15 +1,13 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NavigationContainer } from '@react-navigation/native';
 import CreateAccount from '../Pages/CreateAccount';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Login from '../Pages/Login';
 
 const AppTab = createBottomTabNavigator();
 
-const AuthRoutes = () => {
+const TabRoutes = () => {
   return (
-    <NavigationContainer>
       <AppTab.Navigator
         screenOptions={ {
           tabBarActiveTintColor: '#195aff',
@@ -17,7 +15,7 @@ const AuthRoutes = () => {
         } }
       >
         <AppTab.Screen
-          name='Criar conta'
+          name='CriarConta'
           component={ CreateAccount }
           options={ {
             headerShown: false,
@@ -37,8 +35,7 @@ const AuthRoutes = () => {
           } }
         />
       </AppTab.Navigator>
-    </NavigationContainer>
   )
 }
 
-export default AuthRoutes;
+export default TabRoutes;
